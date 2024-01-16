@@ -24,15 +24,15 @@
 <link rel="stylesheet" href="/css/app.css?v=0.2.5">
 
   
-  <meta name="keywords" content="java,线程池" />
+  <meta name="keywords" content="java,日志,slf4j,log4j" />
 
 
-<link rel="canonical" href="http://example.com/2023/08/16/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+<link rel="canonical" href="http://example.com/2023/07/31/%E6%97%A5%E5%BF%97slf4j%E5%92%8Clog4J/">
 
 
 
   <title>
-java线程池 - java |
+日志slf4j和log4J - java |
 Yume Shoka = 风亦 = 炼丹之路</title>
 <meta name="generator" content="Hexo 7.0.0"></head>
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -60,16 +60,16 @@ Yume Shoka = 风亦 = 炼丹之路</title>
         <div id="brand">
           <div class="pjax">
           
-  <h1 itemprop="name headline">java线程池
+  <h1 itemprop="name headline">日志slf4j和log4J
   </h1>
   
 <div class="meta">
-  <span class="item" title="作成日：2023-08-16 13:19:46">
+  <span class="item" title="作成日：2023-07-31 21:54:12">
     <span class="icon">
       <i class="ic i-calendar"></i>
     </span>
     <span class="text">投稿日</span>
-    <time itemprop="dateCreated datePublished" datetime="2023-08-16T13:19:46+08:00">2023-08-16</time>
+    <time itemprop="dateCreated datePublished" datetime="2023-07-31T21:54:12+08:00">2023-07-31</time>
   </span>
 </div>
 
@@ -102,12 +102,12 @@ Yume Shoka = 风亦 = 炼丹之路</title>
       </div>
       <div id="imgs" class="pjax">
         <ul>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicli9lfebj20zk0m84qp.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipevgoki5j20zk0m84qp.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipevuctzzj20zk0m84qp.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicli3sbvtj20zk0m8x6p.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicljitigmj20zk0m87fp.jpg"></li>
-          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipesx5fdwj20zk0m81kx.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipeyonbf9j20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1giciukx8a7j20zk0m8aio.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipexj2jgzj20zk0m8b09.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gipetfk5zwj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicit31ffoj20zk0m8naf.jpg"></li>
+          <li class="item" data-background-image="https://tva3.sinaimg.cn/large/6833939bly1gicis081o9j20zk0m8dmr.jpg"></li>
         </ul>
       </div>
     </header>
@@ -138,7 +138,7 @@ Yume Shoka = 风亦 = 炼丹之路</title>
 </div>
 
     <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh">
-  <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/16/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2023/07/31/%E6%97%A5%E5%BF%97slf4j%E5%92%8Clog4J/">
 
   <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="image" content="/images/avatar.jpg">
@@ -167,14 +167,14 @@ Yume Shoka = 风亦 = 炼丹之路</title>
 <li><strong>提供更多更强大的功能</strong>：线程池具备可拓展性，允许开发人员向其中增加更多的功能。比如延时定时线程池ScheduledThreadPoolExecutor，就允许任务延期执行或定期执行。</li>
 </ul>
 <h2 id="总体设计"><a href="#总体设计" class="headerlink" title="总体设计"></a>总体设计</h2><p>Java中的线程池核心实现类是ThreadPoolExecutor，本文JDK 1.8的源码来分析Java线程池的核心设计与实现。我们首先来看一下ThreadPoolExecutor的UML类图，了解下ThreadPoolExecutor的继承关系。</p>
-<p><img src="https://img.itya.xyz/picgo/912883e51327e0c7a9d753d11896326511272.png"></p>
+<p><img data-src="https://img.itya.xyz/picgo/912883e51327e0c7a9d753d11896326511272.png"></p>
 <p>ThreadPoolExecutor实现的顶层接口是Executor，顶层接口Executor提供了一种思想：将任务提交和任务执行进行解耦。用户无需关注如何创建线程，如何调度线程来执行任务，用户只需提供Runnable对象，将任务的运行逻辑提交到执行器(Executor)中，由Executor框架完成线程的调配和任务的执行部分。ExecutorService接口增加了一些能力：（1）扩充执行任务的能力，补充可以为一个或一批异步任务生成Future的方法；（2）提供了管控线程池的方法，比如停止线程池的运行。AbstractExecutorService则是上层的抽象类，将执行任务的流程串联了起来，保证下层的实现只需关注一个执行任务的方法即可。最下层的实现类ThreadPoolExecutor实现最复杂的运行部分，ThreadPoolExecutor将会一方面维护自身的生命周期，另一方面同时管理线程和任务，使两者良好的结合从而执行并行任务。</p>
 <p>ThreadPoolExecutor是如何运行，如何同时维护线程和执行任务的呢？其运行机制如下图所示：</p>
-<p><img src="https://img.itya.xyz/picgo/77441586f6b312a54264e3fcf5eebe2663494.png"></p>
+<p><img data-src="https://img.itya.xyz/picgo/77441586f6b312a54264e3fcf5eebe2663494.png"></p>
 <p>线程池在内部实际上构建了一个生产者消费者模型，将线程和任务两者解耦，并不直接关联，从而良好的缓冲任务，复用线程。线程池的运行主要分成两部分：任务管理、线程管理。任务管理部分充当生产者的角色，当任务提交后，线程池会判断该任务后续的流转：（1）直接申请线程执行该任务；（2）缓冲到队列中等待线程执行；（3）拒绝该任务。线程管理部分是消费者，它们被统一维护在线程池内，根据任务请求进行线程的分配，当线程执行完任务后则会继续获取新的任务去执行，最终当线程获取不到任务的时候，线程就会被回收。</p>
 <h2 id="线程池状态"><a href="#线程池状态" class="headerlink" title="线程池状态"></a>线程池状态</h2><p>ThreadPoolExecutor的运行状态有5种，分别为：</p>
-<p><img src="https://img.itya.xyz/picgo/62853fa44bfa47d63143babe3b5a4c6e82532.png"></p>
-<p><img src="https://img.itya.xyz/picgo/610b7741b6854af29ac4ee9599054c8d~tplv-k3u1fbpfcp-zoom-in-crop-mark:3024:0:0:0.awebp"></p>
+<p><img data-src="https://img.itya.xyz/picgo/62853fa44bfa47d63143babe3b5a4c6e82532.png"></p>
+<p><img data-src="https://img.itya.xyz/picgo/610b7741b6854af29ac4ee9599054c8d~tplv-k3u1fbpfcp-zoom-in-crop-mark:3024:0:0:0.awebp"></p>
 <p>线程池运行的状态，并不是用户显式设置的，而是伴随着线程池的运行，由内部来维护。线程池内部使用一个变量维护两个值：运行状态(runState)和线程数量 (workerCount)。在具体实现中，线程池将运行状态(runState)、线程数量 (workerCount)两个关键参数的维护放在了一起，如下代码所示：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ctl：高三位表示线程池运行状态，低29位表示线程池线程运行数量</span></span><br><span class="line"><span class="comment">// 一个变量存储两个值的好处是不必费心思（比如加锁）去维护两个状态的一致性</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="type">AtomicInteger</span> <span class="variable">ctl</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(ctlOf(RUNNING, <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取线程池当前的运行状态（～：按位取反，即0变成1，1变成0。）</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">runStateOf</span><span class="params">(<span class="type">int</span> c)</span>     &#123; <span class="keyword">return</span> c &amp; ~CAPACITY; &#125;</span><br><span class="line"><span class="comment">// 获取线程池当前运行的线程数量</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">workerCountOf</span><span class="params">(<span class="type">int</span> c)</span>  &#123; <span class="keyword">return</span> c &amp; CAPACITY; &#125;</span><br><span class="line"><span class="comment">// 通过线程池状态和运行的线程数量获取ctl</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">ctlOf</span><span class="params">(<span class="type">int</span> rs, <span class="type">int</span> wc)</span> &#123; <span class="keyword">return</span> rs | wc; &#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
@@ -196,9 +196,9 @@ Yume Shoka = 风亦 = 炼丹之路</title>
 
 <p>此时线程池对象只是创建了一个普通的对象，还没有任何线程。</p>
 <h4 id="maximumPoolSize"><a href="#maximumPoolSize" class="headerlink" title="maximumPoolSize"></a>maximumPoolSize</h4><p>当核心线程数和队列都满了时，新提交的任务仍然可以通过创建新的工作线程（叫它<strong>非核心线程</strong>），直到工作线程数达到 maximumPoolSize 为止，这样就可以缓解一时的高峰期了，而用户也不用设置过大的核心线程数。</p>
-<p><img src="https://img.itya.xyz/picgo/202307111154304.gif"></p>
+<p><img data-src="https://img.itya.xyz/picgo/202307111154304.gif"></p>
 <h4 id="keepAliveTime"><a href="#keepAliveTime" class="headerlink" title="keepAliveTime"></a>keepAliveTime</h4><p>当高峰时期过去后，核心线程与非核心线程都一直空跑着，浪费资源。我们可以给<strong>非核心线程</strong>设定一个超时时间 <strong>keepAliveTime</strong>，当这么长时间没能从队列里获取任务时，就不再等了，销毁线程。</p>
-<p><img src="https://img.itya.xyz/picgo/202307111158899.gif"></p>
+<p><img data-src="https://img.itya.xyz/picgo/202307111158899.gif"></p>
 <h4 id="workQueue"><a href="#workQueue" class="headerlink" title="workQueue"></a>workQueue</h4><p>阻塞队列可以阻塞，当阻塞队列当队列里面没有值时，会阻塞直到有值输入。输入也一样，当队列满的时候，会阻塞，直到队列有空间。</p>
 <p><strong>任务队列</strong></p>
 <p>getTask（）有一个从任务队列获取任务的步骤，不同的任务队列有不同的任务存取策略，以下介绍一下可选的任务队列：</p>
@@ -253,7 +253,7 @@ Yume Shoka = 风亦 = 炼丹之路</title>
 <li><p>DiscardPolicy:         放弃本次任务</p>
 </li>
 <li><p>DiscardOldestPolicy:   放弃队列中最早的任务，本任务取而代之</p>
-<p><img src="https://img.itya.xyz/picgo/f5f542ed2743449092c9bfb90c33835b.jpg"></p>
+<p><img data-src="https://img.itya.xyz/picgo/f5f542ed2743449092c9bfb90c33835b.jpg"></p>
 </li>
 </ul>
 <h3 id="Executors"><a href="#Executors" class="headerlink" title="Executors"></a>Executors</h3><h4 id="newFixedThreadPool"><a href="#newFixedThreadPool" class="headerlink" title="newFixedThreadPool"></a>newFixedThreadPool</h4><p>创建一个线程池中线程数量固定大小的线程池</p>
@@ -282,10 +282,10 @@ Yume Shoka = 风亦 = 炼丹之路</title>
 <p>虽然Executor创建的四种方式，除了第四种newScheduledThreadPool，其余底部都是new ThreadPoolExcutor，并且Executors类中封装好的创建线程池的方法使用方便，但是也有其局限性和风险性。可能存在资源耗尽等风险。所以我们可以使用 ThreadPoolExecutor 类中的构造方法手动创建线程池的实例， 从而可以根据我们的使用情况来指定参数，满足使用的同时又能规避风险。</p>
 <p>到此，我们已经把线程池创建完了，那之后submit又是什么流程呢？</p>
 <h3 id="ScheduledThreadPoolExecutor和ThreadPoolExecutor"><a href="#ScheduledThreadPoolExecutor和ThreadPoolExecutor" class="headerlink" title="ScheduledThreadPoolExecutor和ThreadPoolExecutor"></a>ScheduledThreadPoolExecutor和ThreadPoolExecutor</h3><p>这两个类的关系如下：</p>
-<p><img src="https://img.itya.xyz/picgo/0d5a29f00252462ab5f9599138c0d06a.png"></p>
+<p><img data-src="https://img.itya.xyz/picgo/0d5a29f00252462ab5f9599138c0d06a.png"></p>
 <p>上图可以看出，ScheduledThreadPoolExecutor是继承ThreadPoolExecutor 这个类的，所以先以ThreadPoolExecutor 为例，接着往下查看。</p>
 <h2 id="ThreadPoolExecutor-submit"><a href="#ThreadPoolExecutor-submit" class="headerlink" title="ThreadPoolExecutor -submit"></a>ThreadPoolExecutor -submit</h2><p>线程池使用流程图</p>
-<p><img src="https://img.itya.xyz/picgo/java%25E7%25BA%25BF%25E7%25A8%258B%25E6%25B1%25A0%25E6%25B5%2581%25E7%25A8%258B%25E5%259B%25BE.png"></p>
+<p><img data-src="https://img.itya.xyz/picgo/java%25E7%25BA%25BF%25E7%25A8%258B%25E6%25B1%25A0%25E6%25B5%2581%25E7%25A8%258B%25E5%259B%25BE.png"></p>
 <h3 id="线程池例子"><a href="#线程池例子" class="headerlink" title="线程池例子"></a>线程池例子</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.zyh.java;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ThreadPoolTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">ExecutorService</span> <span class="variable">pool</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolExecutor</span>(<span class="number">1</span>, <span class="number">5</span>, <span class="number">1000</span>, TimeUnit.MILLISECONDS, <span class="keyword">new</span> <span class="title class_">SynchronousQueue</span>&lt;&gt;(), Executors.defaultThreadFactory());</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            pool.submit(<span class="keyword">new</span> <span class="title class_">ThreadDemo</span>());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ThreadDemo</span> <span class="keyword">implements</span> <span class="title class_">Runnable</span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">1</span></span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">2</span></span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">3</span></span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">4</span></span><br><span class="line">pool-<span class="number">1</span>-thread-<span class="number">5</span></span><br><span class="line">Exception in thread <span class="string">&quot;main&quot;</span> java.util.concurrent.RejectedExecutionException: Task java.util.concurrent.FutureTask@681a9515 rejected from java.util.concurrent.ThreadPoolExecutor@3af49f1c[Running, <span class="type">pool</span> <span class="variable">size</span> <span class="operator">=</span> <span class="number">5</span>, <span class="type">active</span> <span class="variable">threads</span> <span class="operator">=</span> <span class="number">3</span>, <span class="type">queued</span> <span class="variable">tasks</span> <span class="operator">=</span> <span class="number">0</span>, <span class="type">completed</span> <span class="variable">tasks</span> <span class="operator">=</span> <span class="number">2</span>]</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor$AbortPolicy.rejectedExecution(ThreadPoolExecutor.java:<span class="number">2063</span>)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor.reject(ThreadPoolExecutor.java:<span class="number">830</span>)</span><br><span class="line">	at java.util.concurrent.ThreadPoolExecutor.execute(ThreadPoolExecutor.java:<span class="number">1379</span>)</span><br><span class="line">	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:<span class="number">112</span>)</span><br><span class="line">	at com.zyh.java.ThreadPoolTest.main(ThreadPoolTest.java:<span class="number">9</span>)</span><br></pre></td></tr></table></figure>
 
 <p>上述代码中，由于SynchronousQueue的容量为0且提交速度较快，当提交到第六个线线程时，线程池中的所有线程均未执行，在submit第二个线程是就会创建新的线程，当第六个线程提交时，此时，线程数已经达到最大线程数，且队列已满（容量为0）；</p>
@@ -442,7 +442,9 @@ Yume Shoka = 风亦 = 炼丹之路</title>
 
       <div class="tags">
           <a href="/tags/java/" rel="tag"><i class="ic i-tag"></i> java</a>
-          <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" rel="tag"><i class="ic i-tag"></i> 线程池</a>
+          <a href="/tags/%E6%97%A5%E5%BF%97/" rel="tag"><i class="ic i-tag"></i> 日志</a>
+          <a href="/tags/slf4j/" rel="tag"><i class="ic i-tag"></i> slf4j</a>
+          <a href="/tags/log4j/" rel="tag"><i class="ic i-tag"></i> log4j</a>
       </div>
   </div>
 
@@ -454,7 +456,7 @@ Yume Shoka = 风亦 = 炼丹之路</title>
       <i class="ic i-calendar-check"></i>
     </span>
     <span class="text">編集日</span>
-    <time title="修正日：2024-01-16 13:26:34" itemprop="dateModified" datetime="2024-01-16T13:26:34+08:00">2024-01-16</time>
+    <time title="修正日：2024-01-16 13:57:12" itemprop="dateModified" datetime="2024-01-16T13:57:12+08:00">2024-01-16</time>
   </span>
 </div>
 
@@ -490,7 +492,7 @@ Yume Shoka = 风亦 = 炼丹之路</title>
   </li>
   <li class="link">
     <strong>記事へのリンク：</strong>
-    <a href="http://example.com/2023/08/16/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" title="java线程池">http://example.com/2023/08/16/线程池/</a>
+    <a href="http://example.com/2023/07/31/%E6%97%A5%E5%BF%97slf4j%E5%92%8Clog4J/" title="日志slf4j和log4J">http://example.com/2023/07/31/日志slf4j和log4J/</a>
   </li>
   <li class="license">
     <strong>著作権表示： </strong>このブログ内のすべての記事は、特別な記載がない限り <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> の下のライセンスで保護されています。
@@ -509,20 +511,20 @@ Yume Shoka = 风亦 = 炼丹之路</title>
     <div class="item left">
       
 
-  <a href="/2023/07/31/%E6%97%A5%E5%BF%97slf4j%E5%92%8Clog4J/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipexw3o58j20zk0m8e81.jpg" title="日志slf4j和log4J">
+  <a href="/2023/07/23/java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giph4wqtg4j20zk0m8x6p.jpg" title="java多线程">
   <span class="type">前の記事</span>
   <span class="category"><i class="ic i-flag"></i> java</span>
-  <h3>日志slf4j和log4J</h3>
+  <h3>java多线程</h3>
   </a>
 
     </div>
     <div class="item right">
       
 
-  <a href="/2023/08/16/java%E6%B3%A8%E8%A7%A3/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giciryrr3rj20zk0m8nhk.jpg" title="java注解">
+  <a href="/2023/08/16/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva3.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipevo9j1jj20zk0m8e81.jpg" title="java线程池">
   <span class="type">次の記事</span>
   <span class="category"><i class="ic i-flag"></i> java</span>
-  <h3>java注解</h3>
+  <h3>java线程池</h3>
   </a>
 
     </div>
@@ -545,7 +547,7 @@ Yume Shoka = 风亦 = 炼丹之路</title>
       </div>
       <div class="related panel pjax" data-title="関連記事">
         <ul>
-          <li><a href="/2023/07/23/java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="bookmark" title="java多线程">java多线程</a></li><li><a href="/2023/07/31/%E6%97%A5%E5%BF%97slf4j%E5%92%8Clog4J/" rel="bookmark" title="日志slf4j和log4J">日志slf4j和log4J</a></li><li><a href="/2023/08/16/java%E6%B3%A8%E8%A7%A3/" rel="bookmark" title="java注解">java注解</a></li><li class="active"><a href="/2023/08/16/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" rel="bookmark" title="java线程池">java线程池</a></li>
+          <li><a href="/2023/07/23/java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="bookmark" title="java多线程">java多线程</a></li><li class="active"><a href="/2023/07/31/%E6%97%A5%E5%BF%97slf4j%E5%92%8Clog4J/" rel="bookmark" title="日志slf4j和log4J">日志slf4j和log4J</a></li><li><a href="/2023/08/16/java%E6%B3%A8%E8%A7%A3/" rel="bookmark" title="java注解">java注解</a></li><li><a href="/2023/08/16/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" rel="bookmark" title="java线程池">java线程池</a></li>
         </ul>
       </div>
       <div class="overview panel" data-title="概要">
@@ -596,12 +598,12 @@ Yume Shoka = 风亦 = 炼丹之路</title>
 
   <ul id="quick">
     <li class="prev pjax">
-        <a href="/2023/07/31/%E6%97%A5%E5%BF%97slf4j%E5%92%8Clog4J/" rel="prev" title="前の記事"><i class="ic i-chevron-left"></i></a>
+        <a href="/2023/07/23/java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="prev" title="前の記事"><i class="ic i-chevron-left"></i></a>
     </li>
     <li class="up"><i class="ic i-arrow-up"></i></li>
     <li class="down"><i class="ic i-arrow-down"></i></li>
     <li class="next pjax">
-        <a href="/2023/08/16/java%E6%B3%A8%E8%A7%A3/" rel="next" title="次の記事"><i class="ic i-chevron-right"></i></a>
+        <a href="/2023/08/16/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" rel="next" title="次の記事"><i class="ic i-chevron-right"></i></a>
     </li>
     <li class="percent"></li>
   </ul>
@@ -626,7 +628,7 @@ Yume Shoka = 风亦 = 炼丹之路</title>
 <a href="/categories/java/" title="カテゴリ java">java</a>
 </div>
 
-    <span><a href="/2023/08/16/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" title="java线程池">java线程池</a></span>
+    <span><a href="/2023/07/31/%E6%97%A5%E5%BF%97slf4j%E5%92%8Clog4J/" title="日志slf4j和log4J">日志slf4j和log4J</a></span>
   </li>
 
       
@@ -646,7 +648,7 @@ Yume Shoka = 风亦 = 炼丹之路</title>
 <a href="/categories/java/" title="カテゴリ java">java</a>
 </div>
 
-    <span><a href="/2023/07/31/%E6%97%A5%E5%BF%97slf4j%E5%92%8Clog4J/" title="日志slf4j和log4J">日志slf4j和log4J</a></span>
+    <span><a href="/2023/07/23/java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" title="java多线程">java多线程</a></span>
   </li>
 
       
@@ -656,7 +658,7 @@ Yume Shoka = 风亦 = 炼丹之路</title>
 <a href="/categories/java/" title="カテゴリ java">java</a>
 </div>
 
-    <span><a href="/2023/07/23/java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" title="java多线程">java多线程</a></span>
+    <span><a href="/2023/08/16/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" title="java线程池">java线程池</a></span>
   </li>
 
   </ul>
@@ -687,7 +689,7 @@ Yume Shoka = 风亦 = 炼丹之路</title>
   </div>
 <script data-config type="text/javascript">
   var LOCAL = {
-    path: '2023/08/16/线程池/',
+    path: '2023/07/31/日志slf4j和log4J/',
     favicon: {
       show: "（●´3｀●）やれやれだぜ",
       hide: "(´Д｀)大変だ！"
